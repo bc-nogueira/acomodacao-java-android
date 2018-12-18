@@ -13,6 +13,12 @@ import com.example.prikster.acomodacaojava.model.Acomodacao;
 import com.example.prikster.acomodacaojava.model.AcomodacaoUrls;
 import com.example.prikster.acomodacaojava.remote.AcomodacaoService;
 import com.example.prikster.acomodacaojava.remote.ApiUtils;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AcomodacaoActivity extends AppCompatActivity {
+public class AcomodacaoActivity extends AppCompatActivity implements OnMapReadyCallback {
     Button btnVoltar;
 
     AcomodacaoService acomodacaoService;
@@ -29,6 +35,8 @@ public class AcomodacaoActivity extends AppCompatActivity {
     List<String> urls = new ArrayList<String>();
 
     ListView imageListView;
+
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,10 @@ public class AcomodacaoActivity extends AppCompatActivity {
         final Integer acomodacaoId = Integer.parseInt(extras.getString("acomodacao_id"));
 
         getAcomodacaoById(acomodacaoId);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     public void getAcomodacaoById(Integer id) {
@@ -58,8 +70,8 @@ public class AcomodacaoActivity extends AppCompatActivity {
         call.enqueue(new Callback<AcomodacaoUrls>() {
             @Override
             public void onResponse(Call<AcomodacaoUrls> call, Response<AcomodacaoUrls> response) {
-                System.out.println(response.code());
                 if(response.isSuccessful()) {
+                    acomodacao = new Acomodacao();
                     acomodacao = response.body().getAcomodacao();
                     urls = response.body().getUrls();
 
@@ -88,6 +100,11 @@ public class AcomodacaoActivity extends AppCompatActivity {
                     txtAcomodacaoDescricaoDetail.setText(String.format("%s", acomodacao.getDescricao()));
 
                     imageListView.setAdapter(new ImageAcomodacaoAdapter(AcomodacaoActivity.this, R.layout.image_acomodacao, urls));
+
+                    LatLng acomodacaoLatLng = new LatLng(acomodacao.getLatitude(), acomodacao.getLongitude());
+
+                    mMap.addMarker(new MarkerOptions().position(acomodacaoLatLng).title("Marker in IC UFF"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(acomodacaoLatLng, 15.0f));
                 }
             }
 
@@ -96,5 +113,18 @@ public class AcomodacaoActivity extends AppCompatActivity {
                 Log.e("ERROR: ", t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Add a marker in IC UFF and move the camera
+//        LatLng icUff = new LatLng(-22.906187, -43.132947);
+//
+//        LatLng acomodacaoLatLng = new LatLng(acomodacao.getLatitude(), acomodacao.getLongitude());
+//
+//        mMap.addMarker(new MarkerOptions().position(acomodacaoLatLng).title(acomodacao.getTitulo()));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(acomodacaoLatLng, 15.0f));
     }
 }

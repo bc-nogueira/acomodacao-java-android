@@ -52,12 +52,20 @@ public class Acomodacao {
     @Expose
     private String estado;
 
+    @SerializedName("latitude")
+    @Expose
+    private Double latitude;
+
+    @SerializedName("longitude")
+    @Expose
+    private Double longitude;
+
     public Acomodacao(){
     }
 
     public Acomodacao(Integer id, String titulo, String descricao, Integer capacidade, Double preco,
                       String logradouro, String numero, String complemento, String bairro,
-                      String cidade, String estado, Integer tipo) {
+                      String cidade, String estado, Integer tipo, Double latitude, Double longitude) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
@@ -70,6 +78,8 @@ public class Acomodacao {
         this.cidade = cidade;
         this.estado = estado;
         this.tipo = tipo;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public void setId(Integer id){
@@ -166,6 +176,22 @@ public class Acomodacao {
 
     public void setTipo(Integer tipo) {
         this.tipo = tipo;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public String getTipoEmTexto() {

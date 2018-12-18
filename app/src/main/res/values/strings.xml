@@ -11,4 +11,6 @@
     <string name="label_cidade">Cidade:</string>
     <string name="label_estado">Estado:</string>
     <string name="label_descricao">Descrição:</string>
+    <string name="google_maps_key">AIzaSyAxFARM9NrPcw8lyIsFrwPRrG1v5kdaKL4</string>
+
 </resources>
