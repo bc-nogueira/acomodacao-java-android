@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.prikster.acomodacaojava.model.Acomodacao;
 import com.example.prikster.acomodacaojava.remote.AcomodacaoService;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setTitle("Acomodações");
 
         btnGetAcomodacoesList = (Button) findViewById(R.id.btnGetAcomodacoesList);
+
         listView = (ListView) findViewById(R.id.listView);
         acomodacaoService = ApiUtils.getAcomodacaoService();
 
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getAcomodacoesList() {
+        long begin = System.nanoTime();
         Call<List<Acomodacao>> call = acomodacaoService.getAcomodacoes();
         call.enqueue(new Callback<List<Acomodacao>>() {
             @Override
@@ -60,5 +63,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("ERROR: ", t.getMessage());
             }
         });
+        long difference = (System.nanoTime() - begin)/1000000;
+        btnGetAcomodacoesList.setVisibility(View.INVISIBLE);
+        String message = "Finished in " + difference + "ms";
+        Integer duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(this, message, duration);
+        toast.show();
     }
 }

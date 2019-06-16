@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.prikster.acomodacaojava.model.Acomodacao;
 import com.example.prikster.acomodacaojava.model.AcomodacaoUrls;
@@ -33,6 +34,7 @@ public class AcomodacaoActivity extends AppCompatActivity implements OnMapReadyC
     AcomodacaoService acomodacaoService;
     Acomodacao acomodacao;
     List<String> urls = new ArrayList<String>();
+    long begin;
 
     ListView imageListView;
 
@@ -55,6 +57,8 @@ public class AcomodacaoActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
+        begin = System.nanoTime();
+
         Bundle extras = getIntent().getExtras();
         final Integer acomodacaoId = Integer.parseInt(extras.getString("acomodacao_id"));
 
@@ -63,6 +67,8 @@ public class AcomodacaoActivity extends AppCompatActivity implements OnMapReadyC
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
     public void getAcomodacaoById(Integer id) {
@@ -113,18 +119,17 @@ public class AcomodacaoActivity extends AppCompatActivity implements OnMapReadyC
                 Log.e("ERROR: ", t.getMessage());
             }
         });
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in IC UFF and move the camera
-//        LatLng icUff = new LatLng(-22.906187, -43.132947);
-//
-//        LatLng acomodacaoLatLng = new LatLng(acomodacao.getLatitude(), acomodacao.getLongitude());
-//
-//        mMap.addMarker(new MarkerOptions().position(acomodacaoLatLng).title(acomodacao.getTitulo()));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(acomodacaoLatLng, 15.0f));
+        long difference = (System.nanoTime() - begin)/1000000;
+        String message = "Finished in " + difference + "ms";
+        Integer duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(this, message, duration);
+        toast.show();
     }
 }
